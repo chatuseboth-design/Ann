@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ann Rubio | Ops & Automation Systems</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns%3D%22http://www.w3.org/2000/svg%22 viewBox%3D%220 0 64 64%22%3E%3Crect width%3D%2264%22 height%3D%2264%22 rx%3D%2214%22 fill%3D%22%2319243A%22/%3E%3Crect x%3D%228%22 y%3D%228%22 width%3D%2248%22 height%3D%2248%22 rx%3D%2210%22 fill%3D%22%23C2D1D1%22/%3E%3Ctext x%3D%2232%22 y%3D%2241%22 text-anchor%3D%22middle%22 font-family%3D%22Arial,sans-serif%22 font-size%3D%2224%22 font-weight%3D%22700%22 fill%3D%22%2319243A%22%3EAR%3C/text%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -35,9 +36,6 @@
         .shadow-soft {
             box-shadow: 0 10px 40px -10px rgba(25, 36, 58, 0.08);
         }
-        .shadow-glow {
-            box-shadow: 0 0 40px rgba(194, 209, 209, 0.4);
-        }
 
         /* Continuous Floating & Wiggling Animations */
         @keyframes float-wiggle-1 {
@@ -61,40 +59,294 @@
         .animate-float-wiggle-3 { animation: float-wiggle-3 7s ease-in-out infinite; }
         .animate-float-wiggle-4 { animation: float-wiggle-4 4.5s ease-in-out infinite; }
 
-        /* Subtle Background Particles */
+        /* Subtle Background Particles & Data Points */
         @keyframes particle-drift {
-            0% { transform: translate(0, 0); opacity: 0; }
-            20% { opacity: 0.5; }
-            80% { opacity: 0.5; }
-            100% { transform: translate(30px, -150px); opacity: 0; }
+            0% { transform: translate3d(0, 28px, 0) scale(0.92) rotate(-1deg); opacity: 0; }
+            16% { opacity: 0.42; }
+            78% { opacity: 0.42; }
+            100% { transform: translate3d(34px, -170px, 0) scale(1.04) rotate(2deg); opacity: 0; }
         }
         .animate-particle { animation: particle-drift 15s linear infinite; }
+
+        .metric-particle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.28rem 0.55rem;
+            border: 1px solid rgba(194, 209, 209, 0.42);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.58);
+            box-shadow: 0 14px 34px -24px rgba(25, 36, 58, 0.52);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .metric-particle::before {
+            content: "";
+            width: 0.35rem;
+            height: 0.35rem;
+            border-radius: 999px;
+            background: currentColor;
+            opacity: 0.55;
+            box-shadow: 0 0 14px currentColor;
+        }
+
+        @keyframes native-selection-drag {
+            0%, 10% {
+                clip-path: inset(0 100% 0 0);
+                opacity: 0;
+            }
+            12% {
+                opacity: 1;
+            }
+            30%, 72% {
+                clip-path: inset(0 0 0 0);
+                opacity: 1;
+            }
+            82%, 100% {
+                clip-path: inset(0 100% 0 0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes native-selection-bg {
+            0%, 10% {
+                transform: scaleX(0);
+                opacity: 0;
+            }
+            12% {
+                opacity: 0.68;
+            }
+            30%, 72% {
+                transform: scaleX(1);
+                opacity: 0.68;
+            }
+            82%, 100% {
+                transform: scaleX(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes native-caret-glide {
+            0%, 10% {
+                left: -0.08em;
+                opacity: 0;
+            }
+            12% {
+                opacity: 1;
+            }
+            30%, 72% {
+                left: calc(100% + 0.08em);
+                opacity: 1;
+            }
+            82%, 100% {
+                left: -0.08em;
+                opacity: 0;
+            }
+        }
+
+        @keyframes native-caret-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.28; }
+        }
 
         .dynamic-icon {
             transition: filter 0.4s ease-out, opacity 0.4s ease-out;
         }
 
+        .auto-highlight-word {
+            --selection-duration: 8.8s;
+            --highlight-delay: 0s;
+            position: relative;
+            display: inline-block;
+            isolation: isolate;
+            white-space: nowrap;
+            padding: 0 0.02em;
+        }
+
+        .selection-base,
+        .selection-selected {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auto-highlight-word::before {
+            content: "";
+            position: absolute;
+            left: -0.08em;
+            right: -0.08em;
+            top: 0.04em;
+            bottom: 0.02em;
+            z-index: 0;
+            border-radius: 2px;
+            background: rgba(194, 209, 209, 0.88);
+            transform: scaleX(0);
+            transform-origin: left center;
+            opacity: 0;
+            animation: native-selection-bg var(--selection-duration) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+            animation-delay: var(--highlight-delay);
+        }
+
+        .selection-selected {
+            position: absolute;
+            inset: 0;
+            color: var(--selection-ink, #19243A);
+            clip-path: inset(0 100% 0 0);
+            animation: native-selection-drag var(--selection-duration) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+            animation-delay: var(--highlight-delay);
+            pointer-events: none;
+        }
+
+        .selection-caret {
+            position: absolute;
+            left: -0.08em;
+            top: 0.04em;
+            bottom: 0.02em;
+            z-index: 2;
+            width: 2px;
+            pointer-events: none;
+            opacity: 0;
+            animation: native-caret-glide var(--selection-duration) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+            animation-delay: var(--highlight-delay);
+            will-change: left, opacity;
+        }
+
+        .selection-caret::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 999px;
+            background: rgba(25, 36, 58, 0.9);
+            animation: native-caret-blink 1.05s ease-in-out infinite;
+        }
+
+        .name-highlight {
+            --highlight-delay: 1.1s;
+            --selection-duration: 8.2s;
+        }
+
+        .data-highlight {
+            --selection-duration: 9.2s;
+        }
+
+        .mouse-react {
+            --local-x: 50%;
+            --local-y: 50%;
+            --magnet-x: 0px;
+            --magnet-y: 0px;
+            --lift: 0px;
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            transform: translate3d(var(--magnet-x), calc(var(--magnet-y) + var(--lift)), 0);
+            transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 240ms ease, border-color 240ms ease, background-color 240ms ease, color 240ms ease;
+            will-change: transform;
+        }
+
+        .mouse-react::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle 150px at var(--local-x) var(--local-y), rgba(194, 209, 209, 0.28), rgba(255, 255, 255, 0.12) 42%, transparent 72%);
+            opacity: 0;
+            transition: opacity 220ms ease;
+        }
+
+        .mouse-react > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .mouse-react:hover,
+        .mouse-react.is-hovered {
+            --lift: -3px;
+            border-color: rgba(194, 209, 209, 0.76) !important;
+            box-shadow: 0 22px 46px -30px rgba(25, 36, 58, 0.42);
+        }
+
+        .mouse-react:hover::before,
+        .mouse-react.is-hovered::before {
+            opacity: 1;
+        }
+
+        .project-card .project-preview {
+            transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 260ms ease, border-color 260ms ease;
+        }
+
+        .project-card:hover .project-preview {
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(194, 209, 209, 0.9);
+            box-shadow: 0 28px 60px -38px rgba(25, 36, 58, 0.55);
+        }
+
+        .dashboard-line {
+            height: 0.45rem;
+            border-radius: 999px;
+            background: rgba(194, 209, 209, 0.42);
+        }
+
+        .dashboard-bar {
+            height: 0.6rem;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(25, 36, 58, 0.82), rgba(194, 209, 209, 0.78));
+            transform-origin: left center;
+            transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover .dashboard-bar {
+            transform: scaleX(1.08);
+        }
+
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
+
+        .reveal.mouse-react {
+            transform: translate3d(var(--magnet-x), calc(var(--magnet-y) + 20px + var(--lift)), 0);
+        }
+
+        .reveal.mouse-react.active {
+            transform: translate3d(var(--magnet-x), calc(var(--magnet-y) + var(--lift)), 0);
+        }
+
         .delay-100 { transition-delay: 100ms; }
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .animate-particle,
+            .auto-highlight-word::before,
+            .selection-selected,
+            .selection-caret,
+            .selection-caret::before {
+                animation: none;
+            }
+
+            .mouse-react,
+            .project-card .project-preview,
+            .dashboard-bar {
+                transition: none;
+            }
+        }
     </style>
 </head>
 <body class="font-sans text-brand-text bg-brand-cream selection:bg-brand-blue selection:text-brand-navy">
 
     <!-- Navigation -->
-    <nav class="w-full bg-brand-cream/80 backdrop-blur-md sticky top-0 z-50 border-b border-brand-blue/30 transition-all duration-300">
+    <nav class="w-full bg-brand-cream/90 backdrop-blur-md sticky top-0 z-50 border-b border-brand-blue/30 transition-all duration-300">
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="font-bold tracking-widest text-sm text-brand-navy uppercase">
-                Ann Rubio
+                <span class="auto-highlight-word name-highlight">Ann</span> Rubio
             </div>
             <div class="hidden md:flex space-x-6 lg:space-x-8 text-sm font-medium">
                 <a href="#purpose" class="hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-300">Total Clarity</a>
@@ -102,7 +354,7 @@
                 <a href="#services" class="hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-300">Pricing</a>
                 <a href="#about" class="hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-300">About Me</a>
             </div>
-            <a href="#contact" class="bg-brand-navy text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-brand-blue hover:text-brand-navy hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+            <a href="#contact" class="bg-brand-navy text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-brand-blue hover:text-brand-navy hover:shadow-lg transition-all duration-300">
                 Let's Connect
             </a>
         </div>
@@ -111,93 +363,102 @@
     <!-- Hero Section -->
     <section class="relative pt-24 pb-24 overflow-hidden" id="hero-section">
         
-        <!-- Interactive Hovering Icons & Particles (Parallax + CSS Float) -->
+        <!-- Interactive Hovering Icons & Data Particles -->
         <div id="parallax-icons" class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-            <!-- Background Particles -->
-            <div class="absolute top-[20%] left-[25%] w-2 h-2 rounded-full bg-brand-blue/50 animate-particle"></div>
-            <div class="absolute top-[60%] left-[10%] w-3 h-3 rounded-full bg-brand-blue/40 animate-particle" style="animation-delay: 4s; animation-duration: 18s;"></div>
-            <div class="absolute top-[30%] right-[30%] w-1.5 h-1.5 rounded-full bg-brand-navy/30 animate-particle" style="animation-delay: 2s; animation-duration: 20s;"></div>
-            <div class="absolute top-[75%] right-[15%] w-2.5 h-2.5 rounded-full bg-brand-blue/60 animate-particle" style="animation-delay: 7s; animation-duration: 16s;"></div>
-            <div class="absolute top-[40%] left-[50%] w-1 h-1 rounded-full bg-brand-navy/40 animate-particle" style="animation-delay: 1s; animation-duration: 14s;"></div>
+            <!-- Data Metrics as Particles -->
+            <div class="metric-particle absolute top-[20%] left-[22%] opacity-0 animate-particle text-brand-navy font-mono text-sm font-bold">+24% ROI</div>
+            <div class="absolute top-[55%] left-[10%] w-2 h-2 rounded-full bg-brand-blue/80 animate-particle" style="animation-delay: 4s; animation-duration: 18s;"></div>
+            <div class="metric-particle absolute top-[30%] right-[25%] opacity-0 animate-particle text-brand-blue font-mono text-sm font-bold" style="animation-delay: 2s; animation-duration: 20s;">$12.4k MRR</div>
+            <div class="absolute top-[75%] right-[15%] w-2.5 h-2.5 rounded-full bg-brand-navy/30 animate-particle" style="animation-delay: 7s; animation-duration: 16s;"></div>
+            <div class="metric-particle absolute top-[40%] left-[60%] opacity-0 animate-particle text-brand-navy font-mono text-sm font-bold" style="animation-delay: 1s; animation-duration: 14s;">ROAS 3.2x</div>
+            <div class="metric-particle absolute top-[80%] left-[30%] opacity-0 animate-particle text-brand-blue font-mono text-sm font-bold" style="animation-delay: 5s; animation-duration: 17s;">CPA $45</div>
+            <div class="metric-particle absolute top-[12%] left-[44%] opacity-0 animate-particle text-brand-blue font-mono text-xs md:text-sm font-bold" style="animation-delay: 6s; animation-duration: 19s;">CAC -18%</div>
+            <div class="metric-particle absolute top-[64%] left-[52%] opacity-0 animate-particle text-brand-navy font-mono text-xs md:text-sm font-bold" style="animation-delay: 8s; animation-duration: 21s;">LTV +32%</div>
+            <div class="metric-particle absolute top-[47%] left-[18%] opacity-0 animate-particle text-brand-blue font-mono text-xs md:text-sm font-bold" style="animation-delay: 10s; animation-duration: 16s;">Show Rate 78%</div>
+            <div class="metric-particle absolute top-[68%] right-[32%] opacity-0 animate-particle text-brand-navy font-mono text-xs md:text-sm font-bold" style="animation-delay: 12s; animation-duration: 18s;">AOV $1.2k</div>
+            <div class="metric-particle absolute top-[22%] right-[10%] opacity-0 animate-particle text-brand-blue font-mono text-xs md:text-sm font-bold" style="animation-delay: 14s; animation-duration: 22s;">ARR $336k</div>
+            <div class="metric-particle absolute top-[88%] left-[58%] opacity-0 animate-particle text-brand-navy font-mono text-xs md:text-sm font-bold" style="animation-delay: 3s; animation-duration: 20s;">Churn 2.1%</div>
+            <div class="metric-particle absolute top-[34%] left-[6%] opacity-0 animate-particle text-brand-navy font-mono text-xs md:text-sm font-bold" style="animation-delay: 11s; animation-duration: 17s;">Close Rate 21%</div>
+            <div class="metric-particle absolute top-[58%] right-[5%] opacity-0 animate-particle text-brand-blue font-mono text-xs md:text-sm font-bold" style="animation-delay: 9s; animation-duration: 23s;">Cash Collected 92%</div>
 
             <!-- Icon 1 -->
             <div class="parallax-wrapper absolute top-[10%] left-[2%] md:left-[6%] transition-transform duration-[600ms] ease-out" data-speed="3">
                 <div class="animate-float-wiggle-1">
-                    <img src="https://lh3.googleusercontent.com/d/1Jvw2bKApP_EoAesor2nmqu6H9KiGYCRR" alt="App Icon" class="dynamic-icon w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-xl" style="filter: blur(2px); opacity: 0.6;">
+                    <img src="https://lh3.googleusercontent.com/d/1Jvw2bKApP_EoAesor2nmqu6H9KiGYCRR" alt="Stripe" class="dynamic-icon w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-xl" style="filter: blur(2px); opacity: 0.6;">
                 </div>
             </div>
             
             <!-- Icon 2 -->
             <div class="parallax-wrapper absolute top-[75%] left-[4%] md:left-[8%] transition-transform duration-[600ms] ease-out" data-speed="-2">
                 <div class="animate-float-wiggle-2" style="animation-delay: 0.5s;">
-                    <img src="https://lh3.googleusercontent.com/d/1LT1yTXVM4w-K8cntUVLAP8eWXlFnmmtD" alt="App Icon" class="dynamic-icon w-10 h-10 md:w-14 md:h-14 object-contain drop-shadow-xl" style="filter: blur(2.5px); opacity: 0.5;">
+                    <img src="https://lh3.googleusercontent.com/d/1LT1yTXVM4w-K8cntUVLAP8eWXlFnmmtD" alt="Meta Ads" class="dynamic-icon w-10 h-10 md:w-14 md:h-14 object-contain drop-shadow-xl" style="filter: blur(2.5px); opacity: 0.5;">
                 </div>
             </div>
 
             <!-- Icon 3 -->
             <div class="parallax-wrapper absolute top-[15%] right-[2%] md:right-[6%] transition-transform duration-[600ms] ease-out" data-speed="2.5">
                 <div class="animate-float-wiggle-3" style="animation-delay: 1s;">
-                    <img src="https://lh3.googleusercontent.com/d/1cjGaABz_zdWJ1QF0uy5yZR1z8JPxe8hs" alt="App Icon" class="dynamic-icon w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-xl" style="filter: blur(1.5px); opacity: 0.65;">
+                    <img src="https://lh3.googleusercontent.com/d/1cjGaABz_zdWJ1QF0uy5yZR1z8JPxe8hs" alt="GHL" class="dynamic-icon w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-xl" style="filter: blur(1.5px); opacity: 0.65;">
                 </div>
             </div>
 
             <!-- Icon 4 -->
             <div class="parallax-wrapper absolute top-[80%] right-[5%] md:right-[10%] transition-transform duration-[600ms] ease-out" data-speed="-3">
                 <div class="animate-float-wiggle-4" style="animation-delay: 1.5s;">
-                    <img src="https://lh3.googleusercontent.com/d/1vuduCCvlmv7P9LAtY8o3pp46adY5EFr7" alt="App Icon" class="dynamic-icon w-10 h-10 md:w-14 md:h-14 object-contain drop-shadow-xl" style="filter: blur(2.5px); opacity: 0.5;">
+                    <img src="https://lh3.googleusercontent.com/d/1vuduCCvlmv7P9LAtY8o3pp46adY5EFr7" alt="Shopify" class="dynamic-icon w-10 h-10 md:w-14 md:h-14 object-contain drop-shadow-xl" style="filter: blur(2.5px); opacity: 0.5;">
                 </div>
             </div>
         </div>
         
         <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal active">
-            <div class="inline-block mb-6 px-5 py-2 rounded-full bg-brand-blue/20 text-brand-navy font-bold text-xs tracking-widest uppercase border border-brand-blue/40">
-                Looker Studio Dashboards
-            </div>
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-brand-navy tracking-tight">
-                Stop piecing together<br/><span class="text-brand-blue/80">your business data.</span>
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-brand-navy tracking-tight mt-8">
+                Stop piecing together<br/><span class="text-brand-blue/90 auto-highlight-word data-highlight">your business data.</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed font-light bg-brand-cream/50 inline-block p-2 rounded-xl backdrop-blur-sm">
+            <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
                 Your metrics are scattered across Stripe, GoHighLevel, Meta Ads, and likely a handful of other tools. I build automated Looker Studio dashboards that pull everything into one place, so you can stop fighting with spreadsheets.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#services" class="bg-brand-navy text-white px-8 py-4 rounded-full font-medium hover:bg-brand-blue hover:text-brand-navy transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                <a href="#services" class="bg-brand-navy text-white px-8 py-3.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm">
                     View Packages
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Clear Purpose Section -->
-    <section id="purpose" class="py-16 bg-white">
+    <!-- Clear Purpose Section (Redesigned for a grounded, human feel) -->
+    <section id="purpose" class="py-24 bg-white border-y border-gray-100">
         <div class="max-w-6xl mx-auto px-6">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-3xl md:text-4xl font-bold text-brand-navy mb-4">Turn operational chaos into absolute clarity.</h2>
-                <p class="text-gray-500 max-w-2xl mx-auto">No more guessing. When your systems actually talk to each other, you get completely out of the weeds and can make decisions with total confidence.</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-navy mb-4">Turn operational chaos into <span class="text-brand-blue">absolute clarity.</span></h2>
+                <p class="text-gray-500 max-w-2xl mx-auto font-light text-lg">No more guessing. When your systems actually talk to each other, you get completely out of the weeds and can make decisions with total confidence.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="p-8 rounded-2xl bg-brand-cream/50 border border-gray-100 hover:border-brand-blue hover:bg-white transition-all duration-300 group reveal delay-100">
-                    <div class="w-12 h-12 rounded-full bg-brand-blue/20 flex items-center justify-center text-brand-navy mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300 reveal delay-100 flex flex-col items-start">
+                    <div class="w-10 h-10 rounded-full bg-brand-cream flex items-center justify-center text-brand-navy mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-navy mb-3">No More Manual Reporting</h3>
-                    <p class="text-gray-600 text-sm">Stop spending your Friday afternoons exporting CSVs and fighting with Excel formulas just to figure out the week's revenue.</p>
+                    <h3 class="text-lg font-bold text-brand-navy mb-3">No More Manual Reporting</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Stop spending your Friday afternoons exporting CSVs and fighting with Excel formulas just to figure out the week's revenue.</p>
                 </div>
                 
-                <div class="p-8 rounded-2xl bg-brand-cream/50 border border-gray-100 hover:border-brand-blue hover:bg-white transition-all duration-300 group reveal delay-200">
-                    <div class="w-12 h-12 rounded-full bg-brand-blue/20 flex items-center justify-center text-brand-navy mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <!-- Card 2 -->
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300 reveal delay-200 flex flex-col items-start">
+                    <div class="w-10 h-10 rounded-full bg-brand-cream flex items-center justify-center text-brand-navy mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-navy mb-3">See the Full Lifecycle</h3>
-                    <p class="text-gray-600 text-sm">Connect your ad spend directly to your cash collected. Know exactly what it costs to acquire a paying client, not just a lead.</p>
+                    <h3 class="text-lg font-bold text-brand-navy mb-3">See the Full Lifecycle</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Connect your ad spend directly to your cash collected. Know exactly what it costs to acquire a paying client, not just a lead.</p>
                 </div>
 
-                <div class="p-8 rounded-2xl bg-brand-cream/50 border border-gray-100 hover:border-brand-blue hover:bg-white transition-all duration-300 group reveal delay-300">
-                    <div class="w-12 h-12 rounded-full bg-brand-blue/20 flex items-center justify-center text-brand-navy mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <!-- Card 3 -->
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300 reveal delay-300 flex flex-col items-start">
+                    <div class="w-10 h-10 rounded-full bg-brand-cream flex items-center justify-center text-brand-navy mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-navy mb-3">Always Up-To-Date</h3>
-                    <p class="text-gray-600 text-sm">Your dashboard refreshes automatically in the background. Open it anytime, anywhere, and trust that the numbers are accurate.</p>
+                    <h3 class="text-lg font-bold text-brand-navy mb-3">Always Up-To-Date</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Your dashboard refreshes automatically in the background. Open it anytime, anywhere, and trust that the numbers are accurate.</p>
                 </div>
             </div>
         </div>
@@ -215,22 +476,75 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 
                 <!-- Project 1 Placeholder -->
-                <div class="group reveal delay-100">
-                    <div class="aspect-[4/3] bg-white rounded-2xl border-2 border-dashed border-brand-blue/50 flex flex-col items-center justify-center text-gray-400 mb-4 overflow-hidden relative hover:border-brand-blue transition-colors">
-                        <!-- REPLACE THIS DIV WITH AN ACTUAL <img> TAG LATER -->
-                        <svg class="w-12 h-12 mb-3 text-brand-blue/50 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span class="text-sm font-medium">[Drop Dashboard Image Here]</span>
+                <div class="project-card group reveal delay-100">
+                    <div class="project-preview aspect-[4/3] bg-white rounded-xl border border-gray-200 flex flex-col justify-between text-gray-400 mb-4 overflow-hidden relative shadow-sm p-5">
+                        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-blue/80 via-brand-navy/70 to-brand-blue/30"></div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-widest text-brand-navy">Cash Tracker</span>
+                            <span class="metric-particle text-brand-blue font-mono text-[11px] font-bold">ROAS 4.6x</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="rounded-lg bg-brand-cream p-3">
+                                <div class="dashboard-line w-10 mb-3"></div>
+                                <div class="text-lg font-bold text-brand-navy">$84k</div>
+                                <div class="text-[10px] uppercase tracking-wide text-gray-400">Revenue</div>
+                            </div>
+                            <div class="rounded-lg bg-brand-cream p-3">
+                                <div class="dashboard-line w-8 mb-3"></div>
+                                <div class="text-lg font-bold text-brand-navy">21%</div>
+                                <div class="text-[10px] uppercase tracking-wide text-gray-400">Close</div>
+                            </div>
+                            <div class="rounded-lg bg-brand-cream p-3">
+                                <div class="dashboard-line w-12 mb-3"></div>
+                                <div class="text-lg font-bold text-brand-navy">$45</div>
+                                <div class="text-[10px] uppercase tracking-wide text-gray-400">CPA</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="dashboard-bar w-[68%]"></div>
+                            <div class="dashboard-bar w-[86%] opacity-80"></div>
+                            <div class="dashboard-bar w-[54%] opacity-60"></div>
+                        </div>
                     </div>
                     <h3 class="text-xl font-bold text-brand-navy mb-2">The Multi-Source Cash Tracker</h3>
                     <p class="text-gray-600 text-sm">Blended data from Stripe, Meta Ads, and GHL for a 7-figure coaching business. Gave them immediate visibility into their true Cost Per Acquisition.</p>
                 </div>
 
                 <!-- Project 2 Placeholder -->
-                <div class="group reveal delay-200">
-                    <div class="aspect-[4/3] bg-white rounded-2xl border-2 border-dashed border-brand-blue/50 flex flex-col items-center justify-center text-gray-400 mb-4 overflow-hidden relative hover:border-brand-blue transition-colors">
-                        <!-- REPLACE THIS DIV WITH AN ACTUAL <img> TAG LATER -->
-                        <svg class="w-12 h-12 mb-3 text-brand-blue/50 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span class="text-sm font-medium">[Drop Dashboard Image Here]</span>
+                <div class="project-card group reveal delay-200">
+                    <div class="project-preview aspect-[4/3] bg-white rounded-xl border border-gray-200 flex flex-col justify-between text-gray-400 mb-4 overflow-hidden relative shadow-sm p-5">
+                        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-navy/80 via-brand-blue/80 to-brand-navy/30"></div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-widest text-brand-navy">Pipeline Ops</span>
+                            <span class="metric-particle text-brand-navy font-mono text-[11px] font-bold">Show 78%</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2">
+                            <div class="rounded-lg bg-brand-cream p-3 text-center">
+                                <div class="text-base font-bold text-brand-navy">124</div>
+                                <div class="text-[10px] uppercase tracking-wide text-gray-400">Leads</div>
+                            </div>
+                            <div class="rounded-lg bg-brand-cream p-3 text-center">
+                                <div class="text-base font-bold text-brand-navy">86</div>
+                                <div class="text-[10px] uppercase tracking-wide text-gray-400">Booked</div>
+                            </div>
+                            <div class="rounded-lg bg-brand-cream p-3 text-center">
+                                <div class="text-base font-bold text-brand-navy">67</div>
+                                <div class="text-[10px] uppercase tracking-wide text-gray-400">Showed</div>
+                            </div>
+                            <div class="rounded-lg bg-brand-cream p-3 text-center">
+                                <div class="text-base font-bold text-brand-navy">18</div>
+                                <div class="text-[10px] uppercase tracking-wide text-gray-400">Won</div>
+                            </div>
+                        </div>
+                        <div class="rounded-xl border border-brand-blue/40 bg-brand-cream/70 p-4">
+                            <div class="flex items-end gap-2 h-24">
+                                <div class="w-full rounded-t-md bg-brand-blue/60 h-[45%]"></div>
+                                <div class="w-full rounded-t-md bg-brand-navy/70 h-[72%]"></div>
+                                <div class="w-full rounded-t-md bg-brand-blue/70 h-[58%]"></div>
+                                <div class="w-full rounded-t-md bg-brand-navy/80 h-[86%]"></div>
+                                <div class="w-full rounded-t-md bg-brand-blue/50 h-[63%]"></div>
+                            </div>
+                        </div>
                     </div>
                     <h3 class="text-xl font-bold text-brand-navy mb-2">GHL Pipeline Optimizer</h3>
                     <p class="text-gray-600 text-sm">A deep-dive dashboard specifically built to track sales rep performance, show rates, and pipeline bottlenecks directly from GoHighLevel.</p>
@@ -249,11 +563,11 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Testimonial 1 -->
-                <div class="bg-brand-cream/30 p-8 rounded-3xl border border-gray-100 reveal delay-100">
+                <div class="bg-brand-cream/30 p-8 rounded-xl border border-gray-100 reveal delay-100">
                     <div class="flex text-yellow-400 mb-4">
                         ★★★★★
                     </div>
-                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                    <p class="text-gray-600 italic mb-6 leading-relaxed text-sm">
                         "[Insert an awesome quote from a client here about how much time you saved them or how the dashboard helped them make better decisions.]"
                     </p>
                     <div class="flex items-center gap-3">
@@ -266,11 +580,11 @@
                 </div>
 
                 <!-- Testimonial 2 -->
-                <div class="bg-brand-cream/30 p-8 rounded-3xl border border-gray-100 reveal delay-200">
+                <div class="bg-brand-cream/30 p-8 rounded-xl border border-gray-100 reveal delay-200">
                     <div class="flex text-yellow-400 mb-4">
                         ★★★★★
                     </div>
-                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                    <p class="text-gray-600 italic mb-6 leading-relaxed text-sm">
                         "[Insert a quote here about how painless the process was. Maybe they had a broken dashboard and you came in and fixed it in record time.]"
                     </p>
                     <div class="flex items-center gap-3">
@@ -283,11 +597,11 @@
                 </div>
 
                 <!-- Testimonial 3 -->
-                <div class="bg-brand-cream/30 p-8 rounded-3xl border border-gray-100 reveal delay-300">
+                <div class="bg-brand-cream/30 p-8 rounded-xl border border-gray-100 reveal delay-300">
                     <div class="flex text-yellow-400 mb-4">
                         ★★★★★
                     </div>
-                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                    <p class="text-gray-600 italic mb-6 leading-relaxed text-sm">
                         "[Insert a quote here about the ongoing retainer—how nice it is to just have someone managing the data so they don't have to.]"
                     </p>
                     <div class="flex items-center gap-3">
@@ -310,9 +624,9 @@
                 <p class="text-gray-500 max-w-xl mx-auto">Straightforward, project-based pricing depending on the complexity of your data setup.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Pricing Card 1 -->
-                <div class="bg-white rounded-3xl p-8 shadow-sm border border-transparent hover:border-brand-blue hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col reveal delay-100">
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 flex flex-col reveal delay-100">
                     <div class="mb-6">
                         <span class="text-brand-blue font-bold text-xs tracking-widest uppercase">The Quick Fix</span>
                         <h3 class="text-2xl font-bold text-brand-navy mt-2">Audit & Repair</h3>
@@ -326,7 +640,7 @@
                     <p class="text-gray-600 text-sm mb-8 flex-grow leading-relaxed">
                         Got a dashboard that's currently broken? This is a low-commitment diagnostic and repair to get your metrics flowing correctly again.
                     </p>
-                    <ul class="space-y-3 mb-8 text-sm text-gray-600 font-medium">
+                    <ul class="space-y-3 mb-8 text-sm text-gray-600">
                         <li class="flex items-center gap-3">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
                             Complete system diagnostic
@@ -340,13 +654,13 @@
                             Fix miscalculated fields
                         </li>
                     </ul>
-                    <a href="#contact" class="w-full text-center py-3.5 rounded-full font-bold border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-all duration-300">
+                    <a href="#contact" class="w-full text-center py-3 rounded-md font-medium border border-gray-300 text-brand-navy hover:bg-gray-50 transition-colors">
                         Request an Audit
                     </a>
                 </div>
 
                 <!-- Pricing Card 2 (Featured) -->
-                <div class="bg-brand-navy rounded-3xl p-8 shadow-soft relative overflow-hidden transform md:-translate-y-6 hover:-translate-y-8 transition-all duration-500 flex flex-col hover:shadow-glow reveal delay-200">
+                <div class="bg-brand-navy rounded-xl p-8 shadow-md relative overflow-hidden flex flex-col reveal delay-200 border border-brand-navy">
                     <div class="absolute top-0 right-0 w-40 h-40 bg-brand-blue opacity-10 rounded-bl-full pointer-events-none"></div>
                     <div class="mb-6 relative z-10">
                         <span class="text-brand-blue font-bold text-xs tracking-widest uppercase">Most Popular</span>
@@ -361,7 +675,7 @@
                     <p class="text-gray-300 text-sm mb-8 flex-grow relative z-10 leading-relaxed">
                         Built from scratch for your business. We blend your data from GHL, Meta Ads, Shopify, and Stripe into one unified tracker.
                     </p>
-                    <ul class="space-y-3 mb-8 text-sm text-gray-200 font-medium relative z-10">
+                    <ul class="space-y-3 mb-8 text-sm text-gray-200 relative z-10">
                         <li class="flex items-center gap-3">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
                             Custom metric mapping
@@ -379,13 +693,13 @@
                             Clean, beautiful UI design
                         </li>
                     </ul>
-                    <a href="#contact" class="w-full text-center py-3.5 rounded-full font-bold bg-brand-blue text-brand-navy hover:bg-white transition-all duration-300 relative z-10 shadow-lg hover:shadow-xl">
+                    <a href="#contact" class="w-full text-center py-3 rounded-md font-medium bg-brand-blue text-brand-navy hover:bg-white transition-colors relative z-10">
                         Start Building
                     </a>
                 </div>
 
                 <!-- Pricing Card 3 -->
-                <div class="bg-white rounded-3xl p-8 shadow-sm border border-transparent hover:border-brand-blue hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col reveal delay-300">
+                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 flex flex-col reveal delay-300">
                     <div class="mb-6">
                         <span class="text-brand-blue font-bold text-xs tracking-widest uppercase">Ongoing Support</span>
                         <h3 class="text-2xl font-bold text-brand-navy mt-2">The Retainer</h3>
@@ -399,7 +713,7 @@
                     <p class="text-gray-600 text-sm mb-8 flex-grow leading-relaxed">
                         Let's keep your dashboard flawless. I'll manage updates, fix spontaneous API breaks, and add new metrics as you grow.
                     </p>
-                    <ul class="space-y-3 mb-8 text-sm text-gray-600 font-medium">
+                    <ul class="space-y-3 mb-8 text-sm text-gray-600">
                         <li class="flex items-center gap-3">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
                             Continuous system updates
@@ -413,7 +727,7 @@
                             Priority support access
                         </li>
                     </ul>
-                    <a href="#contact" class="w-full text-center py-3.5 rounded-full font-bold border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-all duration-300">
+                    <a href="#contact" class="w-full text-center py-3 rounded-md font-medium border border-gray-300 text-brand-navy hover:bg-gray-50 transition-colors">
                         Secure a Retainer
                     </a>
                 </div>
@@ -428,22 +742,22 @@
                 
                 <!-- Image Column -->
                 <div class="relative reveal">
-                    <div class="absolute -inset-4 border border-brand-blue/30 rounded-3xl transform translate-x-4 translate-y-4"></div>
-                    <img src="https://lh3.googleusercontent.com/d/1vGwZSKIfq48r4fUQ8yeS4KxbKKMKbAFw" alt="Ma Chery Ann Rubio" class="relative w-full rounded-3xl shadow-2xl object-cover hover:scale-[1.02] transition-transform duration-500">
+                    <div class="absolute -inset-4 border border-brand-blue/30 rounded-xl transform translate-x-4 translate-y-4"></div>
+                    <img src="https://lh3.googleusercontent.com/d/1vGwZSKIfq48r4fUQ8yeS4KxbKKMKbAFw" alt="Ma Chery Ann Rubio" class="relative w-full rounded-xl shadow-xl object-cover">
                 </div>
 
                 <!-- Text Column -->
                 <div class="reveal delay-200">
-                    <h2 class="text-3xl md:text-5xl font-bold mb-3">Hey, I'm Ann.</h2>
+                    <h2 class="text-3xl md:text-5xl font-bold mb-3">Hey, I'm <span class="auto-highlight-word name-highlight">Ann</span>.</h2>
                     <p class="text-brand-blue font-bold tracking-widest uppercase text-xs mb-8">
                         Chief of Staff • Online Business Manager
                     </p>
 
-                    <blockquote class="text-xl font-light italic text-gray-300 mb-8 border-l-2 border-brand-blue pl-6">
+                    <blockquote class="text-lg font-light italic text-gray-300 mb-8 border-l-2 border-brand-blue pl-6">
                         "Most online businesses don't have an operations problem. They have a 'we built it but nobody uses it' problem."
                     </blockquote>
 
-                    <div class="space-y-4 text-gray-300 font-light leading-relaxed mb-10">
+                    <div class="space-y-4 text-gray-300 font-light leading-relaxed mb-10 text-sm md:text-base">
                         <p>
                             I'm an Operations Manager for high-ticket course creators, which means I handle the unglamorous backend work that actually drives your revenue.
                         </p>
@@ -452,9 +766,9 @@
                         </p>
                     </div>
 
-                    <h3 class="font-bold text-white mb-6 text-lg">My Core Capabilities:</h3>
+                    <h3 class="font-bold text-white mb-6 text-sm uppercase tracking-wide">My Core Capabilities:</h3>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-300">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-400">
                         <div>
                             <strong class="text-white block mb-1">CRM & Automations:</strong>
                             GoHighLevel, ManyChat, Zapier
@@ -480,26 +794,26 @@
     <!-- CTA Section -->
     <section id="contact" class="pt-24 pb-12 bg-white text-center">
         <div class="max-w-3xl mx-auto px-6 reveal">
-            <h2 class="text-3xl md:text-5xl font-bold text-brand-navy mb-6">Let's get your data organized.</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-brand-navy mb-6">Let's get your data organized.</h2>
             <p class="text-lg text-gray-500 mb-10 font-light">
                 If you're tired of logging into five different platforms just to see your daily metrics, let's talk.
             </p>
-            <div class="bg-brand-cream border border-brand-blue/30 rounded-3xl p-10 shadow-sm hover:shadow-lg transition-all duration-300">
-                <p class="text-brand-navy font-bold text-xl mb-8">Send me an email and tell me what tools you're currently using.</p>
+            <div class="bg-brand-cream border border-gray-200 rounded-xl p-10 shadow-sm">
+                <p class="text-brand-navy font-bold text-lg mb-8">Send me an email and tell me what tools you're currently using.</p>
                 <div class="flex flex-col items-center justify-center">
-                    <a href="mailto:rubiomacheryann@gmail.com" class="bg-brand-navy text-white px-12 py-4 rounded-full font-bold hover:bg-brand-blue hover:text-brand-navy transition-all duration-300 shadow-md transform hover:-translate-y-1 mb-4 inline-block">
+                    <a href="mailto:rubiomacheryann@gmail.com" class="bg-brand-navy text-white px-10 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm mb-4 inline-block">
                         Email Me
                     </a>
                     <p class="text-sm text-gray-500 mt-2 font-medium">
-                        Or reach out on <a href="https://www.linkedin.com/in/annrubiova/" target="_blank" class="text-brand-navy font-bold underline hover:text-brand-blue transition-colors">LinkedIn</a>
+                        Or reach out on <a href="https://www.linkedin.com/in/annrubiova/" target="_blank" class="text-brand-navy font-bold hover:text-brand-blue transition-colors">LinkedIn</a>
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ Accordion Section (Moved to Bottom) -->
-    <section class="py-16 pb-24 bg-white">
+    <!-- FAQ Accordion Section -->
+    <section class="py-16 pb-24 bg-white border-t border-gray-100">
         <div class="max-w-3xl mx-auto px-6">
             <div class="text-center mb-12 reveal">
                 <h2 class="text-2xl md:text-3xl font-bold text-brand-navy mb-4">A few things you might be wondering...</h2>
@@ -507,91 +821,91 @@
             
             <div class="space-y-4">
                 <!-- FAQ Item 1 -->
-                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal delay-100 overflow-hidden">
+                <div class="bg-white rounded-lg border border-gray-200 hover:border-brand-blue transition-colors duration-300 reveal delay-100 overflow-hidden shadow-sm">
                     <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
-                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"Can't I just use the dashboards already inside GHL or Stripe?"</h3>
-                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <h3 class="text-base font-bold text-brand-navy pr-4">"Can't I just use the dashboards already inside GHL or Stripe?"</h3>
+                        <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm">
                             I totally get it! Those tools have great charts. The issue? They don't talk to each other. Stripe doesn't know your Meta Ad spend, and GHL's pipeline doesn't always match cash collected. A custom dashboard blends it all so you get the full picture instantly.
                         </div>
                     </div>
                 </div>
                 
                 <!-- FAQ Item 2 -->
-                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal delay-200 overflow-hidden">
+                <div class="bg-white rounded-lg border border-gray-200 hover:border-brand-blue transition-colors duration-300 reveal delay-200 overflow-hidden shadow-sm">
                     <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
-                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"I'm not super tech-savvy. Will I break it?"</h3>
-                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <h3 class="text-base font-bold text-brand-navy pr-4">"I'm not super tech-savvy. Will I break it?"</h3>
+                        <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm">
                             Not at all. Once it's built, you just log in and look at the numbers. No coding or API wrangling required. I handle all the tech headaches so you don't have to.
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ Item 3 -->
-                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal delay-300 overflow-hidden">
+                <div class="bg-white rounded-lg border border-gray-200 hover:border-brand-blue transition-colors duration-300 reveal delay-300 overflow-hidden shadow-sm">
                     <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
-                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"What if I need to track a new metric later?"</h3>
-                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <h3 class="text-base font-bold text-brand-navy pr-4">"What if I need to track a new metric later?"</h3>
+                        <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm">
                             That's exactly what the ongoing retainer is for! As your business grows, your dashboard will too. Whether you launch a new offer or test a new ad platform, I'll map it right in.
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ Item 4 -->
-                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                <div class="bg-white rounded-lg border border-gray-200 hover:border-brand-blue transition-colors duration-300 reveal overflow-hidden shadow-sm">
                     <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
-                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"Do I have to pay extra for Looker Studio?"</h3>
-                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <h3 class="text-base font-bold text-brand-navy pr-4">"Do I have to pay extra for Looker Studio?"</h3>
+                        <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm">
                             Nope! Looker Studio is a free Google tool. Occasionally, we might need a low-cost connector tool for specific ad platforms, but we'll discuss that upfront during our audit. No surprise fees.
                         </div>
                     </div>
                 </div>
 
                 <!-- FAQ Item 5 -->
-                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                <div class="bg-white rounded-lg border border-gray-200 hover:border-brand-blue transition-colors duration-300 reveal overflow-hidden shadow-sm">
                     <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
-                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"How long does a custom dashboard take to build?"</h3>
-                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <h3 class="text-base font-bold text-brand-navy pr-4">"How long does a custom dashboard take to build?"</h3>
+                        <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm">
                             Usually about 1 to 2 weeks depending on the complexity. We start with a quick call to map out the KPIs you actually care about, and then I handle the heavy lifting.
                         </div>
                     </div>
                 </div>
 
-                <!-- FAQ Item 6 (New) -->
-                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                <!-- FAQ Item 6 -->
+                <div class="bg-white rounded-lg border border-gray-200 hover:border-brand-blue transition-colors duration-300 reveal overflow-hidden shadow-sm">
                     <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
-                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"What if I use tools other than GHL or Shopify?"</h3>
-                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <h3 class="text-base font-bold text-brand-navy pr-4">"What if I use tools other than GHL or Shopify?"</h3>
+                        <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm">
                             Looker Studio integrates with hundreds of platforms. If your software has an API or can export data to a Google Sheet, we can likely pull it into your dashboard. Just ask me on our call!
                         </div>
                     </div>
                 </div>
 
-                <!-- FAQ Item 7 (New) -->
-                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                <!-- FAQ Item 7 -->
+                <div class="bg-white rounded-lg border border-gray-200 hover:border-brand-blue transition-colors duration-300 reveal overflow-hidden shadow-sm">
                     <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
-                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"Is my business data secure?"</h3>
-                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <h3 class="text-base font-bold text-brand-navy pr-4">"Is my business data secure?"</h3>
+                        <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm">
                             Absolutely. The dashboard connects directly to your platforms via official, secure APIs. I don't store your data, and you retain 100% ownership and control of your accounts at all times.
                         </div>
                     </div>
@@ -601,7 +915,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-brand-cream border-t border-brand-blue/30 py-8 text-center text-sm text-gray-400">
+    <footer class="bg-brand-cream border-t border-gray-200 py-8 text-center text-sm text-gray-500">
         <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <p>&copy; 2026 Ann Rubio. Ops & Automation Systems.</p>
             <div class="flex gap-6 font-medium">
@@ -653,6 +967,73 @@
                         content.style.maxHeight = content.scrollHeight + "px";
                         icon.classList.add('rotate-180');
                     }
+                });
+            });
+
+            // Build native-feeling selection highlights one character at a time.
+            document.querySelectorAll('.auto-highlight-word').forEach(word => {
+                if (word.dataset.highlightReady === 'true') return;
+
+                const sourceText = word.textContent;
+                const baseText = document.createElement('span');
+                const selectedText = document.createElement('span');
+                const caret = document.createElement('span');
+
+                word.dataset.highlightReady = 'true';
+                word.setAttribute('aria-label', sourceText);
+                word.textContent = '';
+
+                baseText.className = 'selection-base';
+                baseText.textContent = sourceText;
+
+                selectedText.className = 'selection-selected';
+                selectedText.setAttribute('aria-hidden', 'true');
+                selectedText.textContent = sourceText;
+
+                caret.className = 'selection-caret';
+                caret.setAttribute('aria-hidden', 'true');
+
+                word.append(baseText, selectedText, caret);
+            });
+
+            // Soft magnetic hover for cards, buttons, links, and controls
+            const finePointer = window.matchMedia('(pointer: fine)').matches;
+            const hoverTargets = document.querySelectorAll([
+                'a[href]',
+                'button',
+                '#purpose .grid > div',
+                '#services .grid > div',
+                '.project-card',
+                'section.py-20.bg-white .grid > div',
+                '#contact .bg-brand-cream',
+                '#about .relative.reveal',
+                '#about .grid.grid-cols-1.sm\\:grid-cols-2 > div',
+                '.faq-button'
+            ].join(','));
+
+            hoverTargets.forEach(target => {
+                target.classList.add('mouse-react');
+
+                if (!finePointer) return;
+
+                target.addEventListener('mousemove', event => {
+                    const rect = target.getBoundingClientRect();
+                    const localX = event.clientX - rect.left;
+                    const localY = event.clientY - rect.top;
+                    const offsetX = ((localX / rect.width) - 0.5) * 10;
+                    const offsetY = ((localY / rect.height) - 0.5) * 10;
+
+                    target.style.setProperty('--local-x', `${localX}px`);
+                    target.style.setProperty('--local-y', `${localY}px`);
+                    target.style.setProperty('--magnet-x', `${offsetX}px`);
+                    target.style.setProperty('--magnet-y', `${offsetY}px`);
+                    target.classList.add('is-hovered');
+                });
+
+                target.addEventListener('mouseleave', () => {
+                    target.style.setProperty('--magnet-x', '0px');
+                    target.style.setProperty('--magnet-y', '0px');
+                    target.classList.remove('is-hovered');
                 });
             });
 
