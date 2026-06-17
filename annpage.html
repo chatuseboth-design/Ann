@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ann Rubio | Ops & Automation Systems</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cream: '#F5F4F0',
+                            blue: '#C2D1D1',
+                            navy: '#19243A',
+                            text: '#2C3333',
+                            light: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+                        heading: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(25, 36, 58, 0.08);
+        }
+        .shadow-glow {
+            box-shadow: 0 0 40px rgba(194, 209, 209, 0.4);
+        }
+
+        /* Continuous Floating & Wiggling Animations */
+        @keyframes float-wiggle-1 {
+            0%, 100% { transform: translateY(0px) rotate(12deg); }
+            50% { transform: translateY(-15px) rotate(18deg); }
+        }
+        @keyframes float-wiggle-2 {
+            0%, 100% { transform: translateY(0px) rotate(-15deg); }
+            50% { transform: translateY(-12px) rotate(-22deg); }
+        }
+        @keyframes float-wiggle-3 {
+            0%, 100% { transform: translateY(0px) rotate(20deg); }
+            50% { transform: translateY(-18px) rotate(10deg); }
+        }
+        @keyframes float-wiggle-4 {
+            0%, 100% { transform: translateY(0px) rotate(-10deg); }
+            50% { transform: translateY(-15px) rotate(-2deg); }
+        }
+        .animate-float-wiggle-1 { animation: float-wiggle-1 6s ease-in-out infinite; }
+        .animate-float-wiggle-2 { animation: float-wiggle-2 5s ease-in-out infinite; }
+        .animate-float-wiggle-3 { animation: float-wiggle-3 7s ease-in-out infinite; }
+        .animate-float-wiggle-4 { animation: float-wiggle-4 4.5s ease-in-out infinite; }
+
+        /* Subtle Background Particles */
+        @keyframes particle-drift {
+            0% { transform: translate(0, 0); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { transform: translate(30px, -150px); opacity: 0; }
+        }
+        .animate-particle { animation: particle-drift 15s linear infinite; }
+
+        .dynamic-icon {
+            transition: filter 0.4s ease-out, opacity 0.4s ease-out;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+    </style>
+</head>
+<body class="font-sans text-brand-text bg-brand-cream selection:bg-brand-blue selection:text-brand-navy">
+
+    <!-- Navigation -->
+    <nav class="w-full bg-brand-cream/80 backdrop-blur-md sticky top-0 z-50 border-b border-brand-blue/30 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-bold tracking-widest text-sm text-brand-navy uppercase">
+                Ann Rubio
+            </div>
+            <div class="hidden md:flex space-x-6 lg:space-x-8 text-sm font-medium">
+                <a href="#purpose" class="hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-300">Total Clarity</a>
+                <a href="#portfolio" class="hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-300">My Work</a>
+                <a href="#services" class="hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-300">Pricing</a>
+                <a href="#about" class="hover:text-brand-blue hover:-translate-y-0.5 transition-all duration-300">About Me</a>
+            </div>
+            <a href="#contact" class="bg-brand-navy text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-brand-blue hover:text-brand-navy hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                Let's Connect
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-24 pb-24 overflow-hidden" id="hero-section">
+        
+        <!-- Interactive Hovering Icons & Particles (Parallax + CSS Float) -->
+        <div id="parallax-icons" class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <!-- Background Particles -->
+            <div class="absolute top-[20%] left-[25%] w-2 h-2 rounded-full bg-brand-blue/50 animate-particle"></div>
+            <div class="absolute top-[60%] left-[10%] w-3 h-3 rounded-full bg-brand-blue/40 animate-particle" style="animation-delay: 4s; animation-duration: 18s;"></div>
+            <div class="absolute top-[30%] right-[30%] w-1.5 h-1.5 rounded-full bg-brand-navy/30 animate-particle" style="animation-delay: 2s; animation-duration: 20s;"></div>
+            <div class="absolute top-[75%] right-[15%] w-2.5 h-2.5 rounded-full bg-brand-blue/60 animate-particle" style="animation-delay: 7s; animation-duration: 16s;"></div>
+            <div class="absolute top-[40%] left-[50%] w-1 h-1 rounded-full bg-brand-navy/40 animate-particle" style="animation-delay: 1s; animation-duration: 14s;"></div>
+
+            <!-- Icon 1 -->
+            <div class="parallax-wrapper absolute top-[10%] left-[2%] md:left-[6%] transition-transform duration-[600ms] ease-out" data-speed="3">
+                <div class="animate-float-wiggle-1">
+                    <img src="https://lh3.googleusercontent.com/d/1Jvw2bKApP_EoAesor2nmqu6H9KiGYCRR" alt="App Icon" class="dynamic-icon w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-xl" style="filter: blur(2px); opacity: 0.6;">
+                </div>
+            </div>
+            
+            <!-- Icon 2 -->
+            <div class="parallax-wrapper absolute top-[75%] left-[4%] md:left-[8%] transition-transform duration-[600ms] ease-out" data-speed="-2">
+                <div class="animate-float-wiggle-2" style="animation-delay: 0.5s;">
+                    <img src="https://lh3.googleusercontent.com/d/1LT1yTXVM4w-K8cntUVLAP8eWXlFnmmtD" alt="App Icon" class="dynamic-icon w-10 h-10 md:w-14 md:h-14 object-contain drop-shadow-xl" style="filter: blur(2.5px); opacity: 0.5;">
+                </div>
+            </div>
+
+            <!-- Icon 3 -->
+            <div class="parallax-wrapper absolute top-[15%] right-[2%] md:right-[6%] transition-transform duration-[600ms] ease-out" data-speed="2.5">
+                <div class="animate-float-wiggle-3" style="animation-delay: 1s;">
+                    <img src="https://lh3.googleusercontent.com/d/1cjGaABz_zdWJ1QF0uy5yZR1z8JPxe8hs" alt="App Icon" class="dynamic-icon w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-xl" style="filter: blur(1.5px); opacity: 0.65;">
+                </div>
+            </div>
+
+            <!-- Icon 4 -->
+            <div class="parallax-wrapper absolute top-[80%] right-[5%] md:right-[10%] transition-transform duration-[600ms] ease-out" data-speed="-3">
+                <div class="animate-float-wiggle-4" style="animation-delay: 1.5s;">
+                    <img src="https://lh3.googleusercontent.com/d/1vuduCCvlmv7P9LAtY8o3pp46adY5EFr7" alt="App Icon" class="dynamic-icon w-10 h-10 md:w-14 md:h-14 object-contain drop-shadow-xl" style="filter: blur(2.5px); opacity: 0.5;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal active">
+            <div class="inline-block mb-6 px-5 py-2 rounded-full bg-brand-blue/20 text-brand-navy font-bold text-xs tracking-widest uppercase border border-brand-blue/40">
+                Looker Studio Dashboards
+            </div>
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-brand-navy tracking-tight">
+                Stop piecing together<br/><span class="text-brand-blue/80">your business data.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed font-light bg-brand-cream/50 inline-block p-2 rounded-xl backdrop-blur-sm">
+                Your metrics are scattered across Stripe, GoHighLevel, Meta Ads, and likely a handful of other tools. I build automated Looker Studio dashboards that pull everything into one place, so you can stop fighting with spreadsheets.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#services" class="bg-brand-navy text-white px-8 py-4 rounded-full font-medium hover:bg-brand-blue hover:text-brand-navy transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    View Packages
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clear Purpose Section -->
+    <section id="purpose" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-navy mb-4">Turn operational chaos into absolute clarity.</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto">No more guessing. When your systems actually talk to each other, you get completely out of the weeds and can make decisions with total confidence.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="p-8 rounded-2xl bg-brand-cream/50 border border-gray-100 hover:border-brand-blue hover:bg-white transition-all duration-300 group reveal delay-100">
+                    <div class="w-12 h-12 rounded-full bg-brand-blue/20 flex items-center justify-center text-brand-navy mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-navy mb-3">No More Manual Reporting</h3>
+                    <p class="text-gray-600 text-sm">Stop spending your Friday afternoons exporting CSVs and fighting with Excel formulas just to figure out the week's revenue.</p>
+                </div>
+                
+                <div class="p-8 rounded-2xl bg-brand-cream/50 border border-gray-100 hover:border-brand-blue hover:bg-white transition-all duration-300 group reveal delay-200">
+                    <div class="w-12 h-12 rounded-full bg-brand-blue/20 flex items-center justify-center text-brand-navy mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-navy mb-3">See the Full Lifecycle</h3>
+                    <p class="text-gray-600 text-sm">Connect your ad spend directly to your cash collected. Know exactly what it costs to acquire a paying client, not just a lead.</p>
+                </div>
+
+                <div class="p-8 rounded-2xl bg-brand-cream/50 border border-gray-100 hover:border-brand-blue hover:bg-white transition-all duration-300 group reveal delay-300">
+                    <div class="w-12 h-12 rounded-full bg-brand-blue/20 flex items-center justify-center text-brand-navy mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-navy mb-3">Always Up-To-Date</h3>
+                    <p class="text-gray-600 text-sm">Your dashboard refreshes automatically in the background. Open it anytime, anywhere, and trust that the numbers are accurate.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example Projects / Portfolio Section (Placeholder) -->
+    <section id="portfolio" class="py-20 bg-brand-cream">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-navy mb-4">Some of my recent builds</h2>
+                <p class="text-gray-500 max-w-xl mx-auto">Here's a peek at what these dashboards actually look like when they're pulling live data.</p>
+            </div>
+
+            <!-- Portfolio Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <!-- Project 1 Placeholder -->
+                <div class="group reveal delay-100">
+                    <div class="aspect-[4/3] bg-white rounded-2xl border-2 border-dashed border-brand-blue/50 flex flex-col items-center justify-center text-gray-400 mb-4 overflow-hidden relative hover:border-brand-blue transition-colors">
+                        <!-- REPLACE THIS DIV WITH AN ACTUAL <img> TAG LATER -->
+                        <svg class="w-12 h-12 mb-3 text-brand-blue/50 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span class="text-sm font-medium">[Drop Dashboard Image Here]</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-navy mb-2">The Multi-Source Cash Tracker</h3>
+                    <p class="text-gray-600 text-sm">Blended data from Stripe, Meta Ads, and GHL for a 7-figure coaching business. Gave them immediate visibility into their true Cost Per Acquisition.</p>
+                </div>
+
+                <!-- Project 2 Placeholder -->
+                <div class="group reveal delay-200">
+                    <div class="aspect-[4/3] bg-white rounded-2xl border-2 border-dashed border-brand-blue/50 flex flex-col items-center justify-center text-gray-400 mb-4 overflow-hidden relative hover:border-brand-blue transition-colors">
+                        <!-- REPLACE THIS DIV WITH AN ACTUAL <img> TAG LATER -->
+                        <svg class="w-12 h-12 mb-3 text-brand-blue/50 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span class="text-sm font-medium">[Drop Dashboard Image Here]</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-navy mb-2">GHL Pipeline Optimizer</h3>
+                    <p class="text-gray-600 text-sm">A deep-dive dashboard specifically built to track sales rep performance, show rates, and pipeline bottlenecks directly from GoHighLevel.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Placeholder Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-bold text-brand-navy mb-4">Don't just take my word for it.</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-brand-cream/30 p-8 rounded-3xl border border-gray-100 reveal delay-100">
+                    <div class="flex text-yellow-400 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                        "[Insert an awesome quote from a client here about how much time you saved them or how the dashboard helped them make better decisions.]"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xs font-bold">Pic</div>
+                        <div>
+                            <p class="text-sm font-bold text-brand-navy">Client Name</p>
+                            <p class="text-xs text-gray-500">Business Type / Niche</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-brand-cream/30 p-8 rounded-3xl border border-gray-100 reveal delay-200">
+                    <div class="flex text-yellow-400 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                        "[Insert a quote here about how painless the process was. Maybe they had a broken dashboard and you came in and fixed it in record time.]"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xs font-bold">Pic</div>
+                        <div>
+                            <p class="text-sm font-bold text-brand-navy">Client Name</p>
+                            <p class="text-xs text-gray-500">Business Type / Niche</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-brand-cream/30 p-8 rounded-3xl border border-gray-100 reveal delay-300">
+                    <div class="flex text-yellow-400 mb-4">
+                        ★★★★★
+                    </div>
+                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                        "[Insert a quote here about the ongoing retainer—how nice it is to just have someone managing the data so they don't have to.]"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xs font-bold">Pic</div>
+                        <div>
+                            <p class="text-sm font-bold text-brand-navy">Client Name</p>
+                            <p class="text-xs text-gray-500">Business Type / Niche</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services & Pricing -->
+    <section id="services" class="py-24 bg-brand-cream">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-navy mb-4">Project Pricing</h2>
+                <p class="text-gray-500 max-w-xl mx-auto">Straightforward, project-based pricing depending on the complexity of your data setup.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Pricing Card 1 -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-transparent hover:border-brand-blue hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col reveal delay-100">
+                    <div class="mb-6">
+                        <span class="text-brand-blue font-bold text-xs tracking-widest uppercase">The Quick Fix</span>
+                        <h3 class="text-2xl font-bold text-brand-navy mt-2">Audit & Repair</h3>
+                        <div class="mt-4 flex items-baseline text-brand-navy">
+                            <span class="text-3xl font-bold tracking-tight">$300</span>
+                            <span class="text-xl font-medium text-gray-400 mx-1">-</span>
+                            <span class="text-3xl font-bold tracking-tight">$800</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 uppercase tracking-wide">One-time flat fee</p>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-8 flex-grow leading-relaxed">
+                        Got a dashboard that's currently broken? This is a low-commitment diagnostic and repair to get your metrics flowing correctly again.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm text-gray-600 font-medium">
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Complete system diagnostic
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Repair broken API connections
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Fix miscalculated fields
+                        </li>
+                    </ul>
+                    <a href="#contact" class="w-full text-center py-3.5 rounded-full font-bold border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-all duration-300">
+                        Request an Audit
+                    </a>
+                </div>
+
+                <!-- Pricing Card 2 (Featured) -->
+                <div class="bg-brand-navy rounded-3xl p-8 shadow-soft relative overflow-hidden transform md:-translate-y-6 hover:-translate-y-8 transition-all duration-500 flex flex-col hover:shadow-glow reveal delay-200">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-brand-blue opacity-10 rounded-bl-full pointer-events-none"></div>
+                    <div class="mb-6 relative z-10">
+                        <span class="text-brand-blue font-bold text-xs tracking-widest uppercase">Most Popular</span>
+                        <h3 class="text-2xl font-bold text-white mt-2">The Custom Build</h3>
+                        <div class="mt-4 flex items-baseline text-white">
+                            <span class="text-3xl font-bold tracking-tight">$500</span>
+                            <span class="text-xl font-medium text-gray-500 mx-1">-</span>
+                            <span class="text-3xl font-bold tracking-tight">$1.5k</span>
+                        </div>
+                        <p class="text-xs text-brand-blue/60 mt-1 uppercase tracking-wide">One-time build fee</p>
+                    </div>
+                    <p class="text-gray-300 text-sm mb-8 flex-grow relative z-10 leading-relaxed">
+                        Built from scratch for your business. We blend your data from GHL, Meta Ads, Shopify, and Stripe into one unified tracker.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm text-gray-200 font-medium relative z-10">
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Custom metric mapping
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Blended data sources
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Advanced calculated fields
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Clean, beautiful UI design
+                        </li>
+                    </ul>
+                    <a href="#contact" class="w-full text-center py-3.5 rounded-full font-bold bg-brand-blue text-brand-navy hover:bg-white transition-all duration-300 relative z-10 shadow-lg hover:shadow-xl">
+                        Start Building
+                    </a>
+                </div>
+
+                <!-- Pricing Card 3 -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-transparent hover:border-brand-blue hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col reveal delay-300">
+                    <div class="mb-6">
+                        <span class="text-brand-blue font-bold text-xs tracking-widest uppercase">Ongoing Support</span>
+                        <h3 class="text-2xl font-bold text-brand-navy mt-2">The Retainer</h3>
+                        <div class="mt-4 flex items-baseline text-brand-navy">
+                            <span class="text-3xl font-bold tracking-tight">$150</span>
+                            <span class="text-xl font-medium text-gray-400 mx-1">-</span>
+                            <span class="text-3xl font-bold tracking-tight">$500</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 uppercase tracking-wide">Per Month</p>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-8 flex-grow leading-relaxed">
+                        Let's keep your dashboard flawless. I'll manage updates, fix spontaneous API breaks, and add new metrics as you grow.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-sm text-gray-600 font-medium">
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Continuous system updates
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Add new metrics instantly
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+                            Priority support access
+                        </li>
+                    </ul>
+                    <a href="#contact" class="w-full text-center py-3.5 rounded-full font-bold border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-all duration-300">
+                        Secure a Retainer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-brand-navy text-white relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Image Column -->
+                <div class="relative reveal">
+                    <div class="absolute -inset-4 border border-brand-blue/30 rounded-3xl transform translate-x-4 translate-y-4"></div>
+                    <img src="https://lh3.googleusercontent.com/d/1vGwZSKIfq48r4fUQ8yeS4KxbKKMKbAFw" alt="Ma Chery Ann Rubio" class="relative w-full rounded-3xl shadow-2xl object-cover hover:scale-[1.02] transition-transform duration-500">
+                </div>
+
+                <!-- Text Column -->
+                <div class="reveal delay-200">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-3">Hey, I'm Ann.</h2>
+                    <p class="text-brand-blue font-bold tracking-widest uppercase text-xs mb-8">
+                        Chief of Staff • Online Business Manager
+                    </p>
+
+                    <blockquote class="text-xl font-light italic text-gray-300 mb-8 border-l-2 border-brand-blue pl-6">
+                        "Most online businesses don't have an operations problem. They have a 'we built it but nobody uses it' problem."
+                    </blockquote>
+
+                    <div class="space-y-4 text-gray-300 font-light leading-relaxed mb-10">
+                        <p>
+                            I'm an Operations Manager for high-ticket course creators, which means I handle the unglamorous backend work that actually drives your revenue.
+                        </p>
+                        <p>
+                            I build GoHighLevel automations that don't break, segment your accounts receivable so the right people get followed up with, ship content pipelines on time, and write SOPs your team will actually open and use.
+                        </p>
+                    </div>
+
+                    <h3 class="font-bold text-white mb-6 text-lg">My Core Capabilities:</h3>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-sm text-gray-300">
+                        <div>
+                            <strong class="text-white block mb-1">CRM & Automations:</strong>
+                            GoHighLevel, ManyChat, Zapier
+                        </div>
+                        <div>
+                            <strong class="text-white block mb-1">Deliverability:</strong>
+                            DNS auth, A2P 10DLC, Branded Domains
+                        </div>
+                        <div>
+                            <strong class="text-white block mb-1">Revenue Ops:</strong>
+                            Accounts receivable, lifecycle tracking
+                        </div>
+                        <div>
+                            <strong class="text-white block mb-1">Team Management:</strong>
+                            Actionable SOPs, Chief of Staff support
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="pt-24 pb-12 bg-white text-center">
+        <div class="max-w-3xl mx-auto px-6 reveal">
+            <h2 class="text-3xl md:text-5xl font-bold text-brand-navy mb-6">Let's get your data organized.</h2>
+            <p class="text-lg text-gray-500 mb-10 font-light">
+                If you're tired of logging into five different platforms just to see your daily metrics, let's talk.
+            </p>
+            <div class="bg-brand-cream border border-brand-blue/30 rounded-3xl p-10 shadow-sm hover:shadow-lg transition-all duration-300">
+                <p class="text-brand-navy font-bold text-xl mb-8">Send me an email and tell me what tools you're currently using.</p>
+                <div class="flex flex-col items-center justify-center">
+                    <a href="mailto:rubiomacheryann@gmail.com" class="bg-brand-navy text-white px-12 py-4 rounded-full font-bold hover:bg-brand-blue hover:text-brand-navy transition-all duration-300 shadow-md transform hover:-translate-y-1 mb-4 inline-block">
+                        Email Me
+                    </a>
+                    <p class="text-sm text-gray-500 mt-2 font-medium">
+                        Or reach out on <a href="https://www.linkedin.com/in/annrubiova/" target="_blank" class="text-brand-navy font-bold underline hover:text-brand-blue transition-colors">LinkedIn</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion Section (Moved to Bottom) -->
+    <section class="py-16 pb-24 bg-white">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-2xl md:text-3xl font-bold text-brand-navy mb-4">A few things you might be wondering...</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal delay-100 overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
+                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"Can't I just use the dashboards already inside GHL or Stripe?"</h3>
+                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                            I totally get it! Those tools have great charts. The issue? They don't talk to each other. Stripe doesn't know your Meta Ad spend, and GHL's pipeline doesn't always match cash collected. A custom dashboard blends it all so you get the full picture instantly.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal delay-200 overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
+                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"I'm not super tech-savvy. Will I break it?"</h3>
+                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                            Not at all. Once it's built, you just log in and look at the numbers. No coding or API wrangling required. I handle all the tech headaches so you don't have to.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal delay-300 overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
+                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"What if I need to track a new metric later?"</h3>
+                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                            That's exactly what the ongoing retainer is for! As your business grows, your dashboard will too. Whether you launch a new offer or test a new ad platform, I'll map it right in.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
+                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"Do I have to pay extra for Looker Studio?"</h3>
+                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                            Nope! Looker Studio is a free Google tool. Occasionally, we might need a low-cost connector tool for specific ad platforms, but we'll discuss that upfront during our audit. No surprise fees.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
+                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"How long does a custom dashboard take to build?"</h3>
+                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                            Usually about 1 to 2 weeks depending on the complexity. We start with a quick call to map out the KPIs you actually care about, and then I handle the heavy lifting.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 (New) -->
+                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
+                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"What if I use tools other than GHL or Shopify?"</h3>
+                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                            Looker Studio integrates with hundreds of platforms. If your software has an API or can export data to a Google Sheet, we can likely pull it into your dashboard. Just ask me on our call!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 7 (New) -->
+                <div class="bg-brand-cream/50 rounded-2xl border border-gray-100 hover:border-brand-blue/50 transition-colors duration-300 reveal overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center focus:outline-none group">
+                        <h3 class="text-lg font-bold text-brand-navy pr-4 group-hover:text-brand-blue transition-colors">"Is my business data secure?"</h3>
+                        <svg class="faq-icon w-6 h-6 text-brand-blue flex-shrink-0 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed text-sm md:text-base">
+                            Absolutely. The dashboard connects directly to your platforms via official, secure APIs. I don't store your data, and you retain 100% ownership and control of your accounts at all times.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-cream border-t border-brand-blue/30 py-8 text-center text-sm text-gray-400">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 Ann Rubio. Ops & Automation Systems.</p>
+            <div class="flex gap-6 font-medium">
+                <a href="https://www.linkedin.com/in/annrubiova/" target="_blank" class="hover:text-brand-navy transition-colors">LinkedIn</a>
+                <a href="mailto:rubiomacheryann@gmail.com" class="hover:text-brand-navy transition-colors">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Scroll Reveal Logic
+            const reveals = document.querySelectorAll('.reveal');
+            const revealOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+            
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+
+            // FAQ Accordion Logic
+            const faqButtons = document.querySelectorAll('.faq-button');
+            
+            faqButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    const icon = button.querySelector('.faq-icon');
+                    
+                    // Close all other FAQs to keep it clean
+                    faqButtons.forEach(otherButton => {
+                        if (otherButton !== button) {
+                            otherButton.nextElementSibling.style.maxHeight = null;
+                            otherButton.querySelector('.faq-icon').classList.remove('rotate-180');
+                        }
+                    });
+
+                    // Toggle the clicked FAQ
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.classList.add('rotate-180');
+                    }
+                });
+            });
+
+            // Advanced Parallax Wiggle & Proximity Hover Logic for Hero Icons
+            const heroSection = document.getElementById('hero-section');
+            const parallaxWrappers = document.querySelectorAll('.parallax-wrapper');
+
+            if (heroSection && parallaxWrappers.length > 0) {
+                heroSection.addEventListener('mousemove', function(e) {
+                    const rect = heroSection.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    const mouseX = e.clientX - centerX;
+                    const mouseY = e.clientY - centerY;
+
+                    parallaxWrappers.forEach(wrapper => {
+                        // 1. Global Parallax Calculation (Softer, less aggressive)
+                        const speed = wrapper.getAttribute('data-speed');
+                        const globalX = (mouseX * speed) / 90; 
+                        const globalY = (mouseY * speed) / 90;
+
+                        // 2. Proximity Calculation (Distance from mouse to this specific icon)
+                        const iconRect = wrapper.getBoundingClientRect();
+                        const iconCenterX = iconRect.left + iconRect.width / 2;
+                        const iconCenterY = iconRect.top + iconRect.height / 2;
+                        
+                        const distX = e.clientX - iconCenterX;
+                        const distY = e.clientY - iconCenterY;
+                        const distance = Math.sqrt(distX * distX + distY * distY);
+
+                        // Proximity thresholds
+                        const maxDistance = 300; // Radius for interaction
+                        let scale = 1;
+                        let proximityX = 0;
+                        let proximityY = 0;
+                        
+                        // Default states based on element's initial style
+                        const img = wrapper.querySelector('.dynamic-icon');
+                        let targetBlur = img.style.filter.replace(/[^\d.]/g, '') || 2; 
+                        let baseOpacity = parseFloat(img.style.opacity) || 0.6;
+                        let currentBlur = targetBlur;
+                        let currentOpacity = baseOpacity;
+
+                        // If mouse is near the icon, amplify the effects!
+                        if (distance < maxDistance) {
+                            const intensity = 1 - (distance / maxDistance); // 0 to 1 based on closeness
+                            const easeIntensity = intensity * intensity; // Smooth easing curve
+                            
+                            scale = 1 + (easeIntensity * 0.12); // Softer scaling, max 1.12x
+                            currentBlur = targetBlur - (easeIntensity * targetBlur); // Clear focus
+                            currentOpacity = baseOpacity + (easeIntensity * (1 - baseOpacity)); // Solid opacity
+                            
+                            // MAGNETIC ATTRACT: Positive pull towards the cursor
+                            proximityX = (distX * easeIntensity * 0.25);
+                            proximityY = (distY * easeIntensity * 0.25);
+                        }
+
+                        // Apply wrapper transform (movement & scale)
+                        wrapper.style.transform = `translate(${globalX + proximityX}px, ${globalY + proximityY}px) scale(${scale})`;
+                        
+                        // Apply image filters (blur & opacity)
+                        if (img) {
+                            img.style.filter = `blur(${currentBlur}px)`;
+                            img.style.opacity = currentOpacity;
+                        }
+                    });
+                });
+
+                // Reset positions and filters when mouse leaves the hero section entirely
+                heroSection.addEventListener('mouseleave', function() {
+                    parallaxWrappers.forEach(wrapper => {
+                        wrapper.style.transform = `translate(0px, 0px) scale(1)`;
+                        const img = wrapper.querySelector('.dynamic-icon');
+                        if (img) {
+                            // Reset to defaults
+                            if (wrapper.getAttribute('data-speed') == "3") { img.style.filter = "blur(2px)"; img.style.opacity = "0.6"; }
+                            else if (wrapper.getAttribute('data-speed') == "-2") { img.style.filter = "blur(2.5px)"; img.style.opacity = "0.5"; }
+                            else if (wrapper.getAttribute('data-speed') == "2.5") { img.style.filter = "blur(1.5px)"; img.style.opacity = "0.65"; }
+                            else { img.style.filter = "blur(2.5px)"; img.style.opacity = "0.5"; }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
