@@ -343,12 +343,23 @@
         }
 
         .hero-title {
-            font-size: clamp(3.4rem, 5vw, 4.4rem);
+            font-size: clamp(3.35rem, 4.35vw, 4.15rem);
+            line-height: 1.06;
+        }
+
+        .hero-title-line {
+            display: block;
         }
 
         @media (min-width: 1280px) {
             .hero-title {
-                font-size: 4.8rem;
+                font-size: clamp(4.15rem, 4.85vw, 4.65rem);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero-title-line {
+                white-space: nowrap;
             }
         }
 
@@ -479,8 +490,8 @@
         <div class="max-w-7xl mx-auto px-6 relative z-10 reveal active">
             <div class="grid grid-cols-1 lg:grid-cols-[minmax(610px,1.05fr)_minmax(410px,0.95fr)] gap-8 lg:gap-8 items-end">
                 <div class="text-center lg:text-left pb-14 lg:pb-24">
-                    <h1 class="hero-title font-bold leading-tight mb-6 text-brand-navy tracking-tight">
-                        Stop piecing together<br/><span class="text-brand-blue/90 auto-highlight-word data-highlight">your business data.</span>
+                    <h1 class="hero-title font-bold mb-6 text-brand-navy tracking-tight">
+                        <span class="hero-title-line">Stop piecing together</span><span class="hero-title-line text-brand-blue/90 auto-highlight-word data-highlight">your business data.</span>
                     </h1>
                     <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
                         Your metrics are scattered across Stripe, GoHighLevel, Meta Ads, and likely a handful of other tools. I build automated Looker Studio dashboards that pull everything into one place, so you can stop fighting with spreadsheets.
