@@ -231,6 +231,12 @@
             --selection-duration: 9.2s;
         }
 
+        @media (min-width: 1024px) {
+            .data-highlight {
+                white-space: nowrap;
+            }
+        }
+
         .mouse-react {
             --local-x: 50%;
             --local-y: 50%;
@@ -301,6 +307,66 @@
             transform: scaleX(1.08);
         }
 
+        .hero-portrait-stage {
+            position: relative;
+            overflow: visible;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            min-height: 100%;
+            width: clamp(500px, 43vw, 620px);
+        }
+
+        .hero-portrait-stage::before {
+            content: "";
+            position: absolute;
+            right: 7%;
+            bottom: 0;
+            width: 74%;
+            height: 68%;
+            z-index: -1;
+            border-radius: 999px 999px 0 0;
+            background: radial-gradient(ellipse at center, rgba(194, 209, 209, 0.28), rgba(194, 209, 209, 0.08) 48%, transparent 72%);
+            filter: blur(10px);
+            pointer-events: none;
+        }
+
+        .hero-portrait-image {
+            display: block;
+            width: 100%;
+            max-width: clamp(500px, 46vw, 620px);
+            max-height: clamp(560px, 64vh, 690px);
+            object-fit: contain;
+            object-position: bottom center;
+            filter: drop-shadow(0 30px 34px rgba(25, 36, 58, 0.2));
+            transform: translateY(1px);
+        }
+
+        .hero-title {
+            font-size: clamp(3.4rem, 5vw, 4.4rem);
+        }
+
+        @media (min-width: 1280px) {
+            .hero-title {
+                font-size: 4.8rem;
+            }
+        }
+
+        @media (max-width: 1023px) {
+            .hero-title {
+                font-size: clamp(3rem, 9vw, 4.5rem);
+            }
+
+            .hero-portrait-stage {
+                width: min(86vw, 560px);
+            }
+
+            .hero-portrait-image {
+                max-width: min(86vw, 560px);
+                max-height: 620px;
+            }
+        }
+
         .reveal {
             opacity: 0;
             transform: translateY(20px);
@@ -361,7 +427,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-24 pb-24 overflow-hidden" id="hero-section">
+    <section class="relative pt-20 lg:pt-24 pb-0 overflow-hidden" id="hero-section">
         
         <!-- Interactive Hovering Icons & Data Particles -->
         <div id="parallax-icons" class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -410,17 +476,34 @@
             </div>
         </div>
         
-        <div class="max-w-4xl mx-auto px-6 text-center relative z-10 reveal active">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-brand-navy tracking-tight mt-8">
-                Stop piecing together<br/><span class="text-brand-blue/90 auto-highlight-word data-highlight">your business data.</span>
-            </h1>
-            <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-                Your metrics are scattered across Stripe, GoHighLevel, Meta Ads, and likely a handful of other tools. I build automated Looker Studio dashboards that pull everything into one place, so you can stop fighting with spreadsheets.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#services" class="bg-brand-navy text-white px-8 py-3.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm">
-                    View Packages
-                </a>
+        <div class="max-w-7xl mx-auto px-6 relative z-10 reveal active">
+            <div class="grid grid-cols-1 lg:grid-cols-[minmax(610px,1.05fr)_minmax(410px,0.95fr)] gap-8 lg:gap-8 items-end">
+                <div class="text-center lg:text-left pb-14 lg:pb-24">
+                    <h1 class="hero-title font-bold leading-tight mb-6 text-brand-navy tracking-tight">
+                        Stop piecing together<br/><span class="text-brand-blue/90 auto-highlight-word data-highlight">your business data.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
+                        Your metrics are scattered across Stripe, GoHighLevel, Meta Ads, and likely a handful of other tools. I build automated Looker Studio dashboards that pull everything into one place, so you can stop fighting with spreadsheets.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                        <a href="#services" class="bg-brand-navy text-white px-8 py-3.5 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-sm">
+                            View Packages
+                        </a>
+                        <a href="#portfolio" class="bg-white/80 border border-brand-blue/50 text-brand-navy px-8 py-3.5 rounded-md font-medium hover:bg-brand-blue/30 transition-colors shadow-sm">
+                            See My Work
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-portrait-stage relative max-w-sm sm:max-w-md lg:max-w-none mx-auto lg:mx-0 self-end">
+                    <img
+                        src="https://lh3.googleusercontent.com/d/19rpQeUY6vfn8EPMkbCScoDAmBwnAxuVa"
+                        onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=19rpQeUY6vfn8EPMkbCScoDAmBwnAxuVa&amp;sz=w1400';"
+                        alt="Ann Rubio"
+                        class="hero-portrait-image"
+                        loading="eager"
+                    >
+                </div>
             </div>
         </div>
     </section>
